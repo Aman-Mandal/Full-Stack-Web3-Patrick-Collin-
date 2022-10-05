@@ -26,7 +26,16 @@ async function main() {
 
   // Deploying Contract
   const contract = await contractFactory.deploy();
-  console.log(contract);
+  // console.log(contract);
+
+  // TRANSACTION RECEIPT
+  // When we wait for a block of transaction, we get a transaction Receipt
+  const transactionReceipt = await contract.deployTransaction.wait(1); // wait for 1 block of transaction
+  console.log("Transaction Receipt : ", transactionReceipt);
+
+  // TRANSACTION RESPONSE (Deployment Transaction)
+  const transactionResponse = contract.deployTransaction;
+  console.log("Transaction Response : ", transactionResponse);
 }
 
 main()
