@@ -1,39 +1,42 @@
-const ethers = require("ethers");
-const fs = require("fs-extra");
-require("dotenv").config();
+const ethers = require('ethers')
+const fs = require('fs-extra')
+require('dotenv').config()
 
 async function main() {
   // http://127.0.0.1:7545 - RpcProvider
 
   // provider takes the url from Ganache to connect to the local blockchain network (like VM Network in remix)
-  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL)
   // wallet takes (private key, provider)
-  // const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
 
-  const encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf-8");
-  let wallet = new ethers.Wallet.fromEncryptedJsonSync(
-    encryptedJson,
-    process.env.PRIVATE_KEY_PASSWORD
-  );
-  wallet = await wallet.connect(provider);
+  // FOR ENCRYPTION --- USE ALWAYS THIS METHOD ONLY
+  // const encryptedJson = fs.readFileSync("./.encryptedKey.json", "utf-8");
+  // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+  //   encryptedJson,
+  //   process.env.PRIVATE_KEY_PASSWORD
+  // );
+  // wallet = await wallet.connect(provider);
 
-  const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf-8");
+  const abi = fs.readFileSync('./SimpleStorage_sol_SimpleStorage.abi', 'utf-8')
   const binary = fs.readFileSync(
-    "./SimpleStorage_sol_SimpleStorage.bin",
-    "utf-8"
-  );
+    './SimpleStorage_sol_SimpleStorage.bin',
+    'utf-8'
+  )
 
   // ContractFactory is an object provided by ethers to deploy contract
-  const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-  console.log("Deploying the contract!! Please wait...");
+  const contractFactory = new ethers.ContractFactory(abi, binary, wallet)
+  console.log('Deploying the contract!! Please wait...')
 
   // Deploying Contract
-  const contract = await contractFactory.deploy();
+  const contract = await contractFactory.deploy()
   // console.log(contract);
 
   // TRANSACTION RECEIPT
   // When we wait for a block of transaction, we get a transaction Receipt
-  await contract.deployTransaction.wait(1); // wait for 1 block of transaction
+  await contract.deployTransaction.wait(1) // wait for 1 block of transaction
+  console.log(`Contract Address: ${contract.address}`)
+
   // console.log("Transaction Receipt : ", transactionReceipt);
 
   // TRANSACTION RESPONSE (Deployment Transaction) : When we call a function on contract we get response
@@ -42,14 +45,14 @@ async function main() {
 
   // Using the retrieve function from contract
 
-  const currentFavNumber = await contract.retrieve();
-  console.log(`Fav No: ${currentFavNumber}`);
+  const currentFavNumber = await contract.retrieve()
+  console.log(`Fav No: ${currentFavNumber}`)
 
-  const transactionResponse = await contract.store("8989");
-  const transactionReceipt = await transactionResponse.wait(1);
+  const transactionResponse = await contract.store('8989')
+  const transactionReceipt = await transactionResponse.wait(1)
 
-  const updatedFavNumber = await contract.retrieve();
-  console.log(`Updated Fav No : ${updatedFavNumber}`);
+  const updatedFavNumber = await contract.retrieve()
+  console.log(`Updated Fav No : ${updatedFavNumber}`)
 
   /////////////////////////////
 
@@ -78,7 +81,7 @@ async function main() {
 
 main()
   .then(() => process.exit(0))
-  .catch((err) => {
-    console.error(err);
-    process.exit(1);
-  });
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })

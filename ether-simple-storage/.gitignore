@@ -1,3 +1,4 @@
 node_modules
 .env
 .encryptedKey.json
+.encryptedJsonKeyNew.json

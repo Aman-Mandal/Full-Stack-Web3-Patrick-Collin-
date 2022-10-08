@@ -7,6 +7,6 @@
     "solc": "0.8.7-fixed"
   },
   "scripts": {
-    "compile": "yarn solcjs --bin --abi --inclue-path node_modules/ --base-path . -o . SimpleStorage.sol"
+    "compile": "yarn solcjs --bin --abi --inclue-path node_modules/ --base-path . -o . SimpleStorageNew.sol"
   }
 }
